@@ -2,6 +2,7 @@ import logo from './logo.svg';
 import './App.css';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Alert } from 'bootstrap';
 
 function App() {
   const [name, setName] = useState([]);
@@ -47,8 +48,10 @@ function App() {
   };
 }, [timer]);
 
-const verificarRespuesta = () => {
-  if (name === paisRandom.name) {
+const verificarRespuesta = (event) => {
+  event.preventDefault()
+  console.log(event);
+  if (event.target.pregunta.value === paisRandom.name) {
     console.log("respuesta correcta");
     setPuntaje(puntaje + 10 + timer);
 
@@ -57,6 +60,8 @@ const verificarRespuesta = () => {
     console.log("respuesta incorrecta");
     setPuntaje(puntaje - 1);
   }
+  
+  event.target.pregunta.value='';
   const randomElement = paises[Math.floor(Math.random() * paises.length)];
   setPaisRandom(randomElement);
   setTimer(15)
@@ -69,8 +74,10 @@ return (
     <h2>Tiempo: {timer}</h2>
     <img src={paisRandom.flag} className='img' />
     <h2>Puntaje: {puntaje}</h2>
-    <input type="text" id="pais" placeholder='Adivina la bandera' onKeyUp={(e) => setName(e.target.value)}></input>
-    <button type='submit' onClick={verificarRespuesta}>Enviar</button>
+    <form onSubmit={verificarRespuesta}>
+      <input type="text" id="pais" placeholder='Adivina la bandera' name="pregunta"></input>
+      <button type='submit'>Enviar</button>
+    </form>
 
   </div>
 );
